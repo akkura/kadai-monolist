@@ -35,9 +35,10 @@ class UsersController extends Controller
    
     public function show($id)
     {
-        if(Auth::user()->id == $id){
+      
          $user = User::find($id);
         $count_want = $user->want_items()->count();
+        $count_have = $user->have_items()->count();
         $items = [];
         if (Item::exists()) {
             $items = \DB::table('items')->join('item_user', 'items.id', '=', 'item_user.item_id')->select('items.*')->where('item_user.user_id', $user->id)->distinct()->groupBy('items.id')->paginate(20);
@@ -47,11 +48,9 @@ class UsersController extends Controller
             'user' => $user,
             'items' => $items,
             'count_want' => $count_want,
-            /**'count_have' => $count_have,**/
+            'count_have' => $count_have,
         ]);
-        }
-        
-        return redirect()->back();
+     
     }
 
   
